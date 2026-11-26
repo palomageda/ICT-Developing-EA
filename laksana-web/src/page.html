@@ -1,0 +1,1156 @@
+<title>Website LAKSANA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Prototipe website LAKSANA, Lembaga Advokasi Keadilan Sosial dan Hak Asasi Manusia: ruang baca publik dan ruang penulis untuk isu hukum, HAM, dan lingkungan hidup.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: koran sipil. Kolom baca sempit untuk tulisan, grid lebar untuk indeks; motif "alas emas" dari logo menjadi garis dasar setiap judul. */
+:root{
+  --ink:#1B2440;        /* biru tinta: logo, teks utama */
+  --gold:#C8962E;       /* emas padi: aksen, CTA */
+  --gold-ink:#8A6216;   /* emas untuk teks di latar terang */
+  --paper:#F4F5F8;      /* latar halaman, netral kebiruan */
+  --surface:#FFFFFF;
+  --sunk:#E9ECF2;
+  --fg:#1B2440;
+  --muted:#596178;
+  --line:#D6DAE3;
+  --p-hukum:#2F5596;    /* pilar Hukum */
+  --p-ham:#A2403F;      /* pilar HAM */
+  --p-ling:#2E6A4E;     /* pilar Lingkungan Hidup */
+  --ok:#2E6A4E; --warn:#9A6A12; --crit:#A2403F;
+  --on-ink:#F3EEE3;
+  --band:#1B2440;
+  --f-display:"Newsreader","Iowan Old Style","Georgia",serif;
+  --f-ui:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --step--1:.8125rem; --step-0:1rem; --step-1:1.1875rem; --step-2:1.5rem; --step-3:2rem; --step-4:2.75rem; --step-5:3.6rem;
+  --r:6px; --wrap:1200px; --read:680px;
+  --gut-l:max(16px, env(safe-area-inset-left, 0px));
+  --gut-r:max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ink:#E9ECF3; --gold:#D8A645; --gold-ink:#E2B65E; --paper:#0F1424; --surface:#161D31; --sunk:#1E2740;
+  --fg:#E6E9F1; --muted:#A1A9BE; --line:#2B3552; --p-hukum:#8FAAE6; --p-ham:#E59491; --p-ling:#7FC4A0;
+  --ok:#7FC4A0; --warn:#E2B65E; --crit:#E59491; --on-ink:#F3EEE3; --band:#0A0F1C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ink:#E9ECF3; --gold:#D8A645; --gold-ink:#E2B65E; --paper:#0F1424; --surface:#161D31; --sunk:#1E2740;
+  --fg:#E6E9F1; --muted:#A1A9BE; --line:#2B3552; --p-hukum:#8FAAE6; --p-ham:#E59491; --p-ling:#7FC4A0;
+  --ok:#7FC4A0; --warn:#E2B65E; --crit:#E59491; --on-ink:#F3EEE3; --band:#0A0F1C; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--paper);color:var(--fg);font:400 var(--step-0)/1.6 var(--f-ui);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--band)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:2px}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:500;line-height:1.15;text-wrap:balance;margin:0;letter-spacing:-.01em}
+p{margin:0}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.eyebrow{font:600 .72rem/1.2 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-size:.82em}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* Motif alas emas: garis pijakan di bawah judul bagian, seperti alas pada logo */
+.base{display:inline-block;padding-bottom:.45rem;background:linear-gradient(var(--gold),var(--gold)) left bottom/2.4rem 3px no-repeat}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font:600 .9rem/1 var(--f-ui);padding:.75rem 1.1rem;border-radius:var(--r);border:1px solid transparent;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn-gold{background:var(--gold);color:#1B2440}
+.btn-gold:hover{filter:brightness(1.06)}
+.btn-ink{background:var(--fg);color:var(--paper)}
+.btn-line{background:transparent;border-color:var(--line);color:var(--fg)}
+.btn-line:hover{border-color:var(--fg)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* Pilar */
+.pill{display:inline-flex;align-items:center;gap:.4rem;font:600 .72rem/1 var(--f-ui);letter-spacing:.06em;text-transform:uppercase}
+.pill::before{content:"";width:.55rem;height:.55rem;background:currentColor;border-radius:1px}
+.pill.hukum{color:var(--p-hukum)} .pill.ham{color:var(--p-ham)} .pill.ling{color:var(--p-ling)}
+.type{font:500 .72rem/1 var(--f-mono);color:var(--muted);letter-spacing:.02em}
+
+/* Bilah prototipe */
+.protobar{background:var(--band);color:var(--on-ink);font-size:.8rem}
+.protobar .wrap{display:flex;gap:1rem;align-items:center;padding-block:.5rem;overflow-x:auto;scrollbar-width:none}
+.protobar b{font-weight:600;color:var(--gold);white-space:nowrap}
+.protobar a{text-decoration:none;opacity:.78;white-space:nowrap;padding:.15rem 0;border-bottom:1px solid transparent}
+.protobar a:hover{opacity:1}
+.protobar a[aria-current="page"]{opacity:1;border-bottom-color:var(--gold)}
+.protobar .sp{flex:1}
+.theme-btn{background:none;border:1px solid rgba(243,238,227,.3);color:var(--on-ink);font:500 .75rem var(--f-ui);padding:.25rem .6rem;border-radius:99px;cursor:pointer;white-space:nowrap}
+
+/* Header situs */
+.alert{background:var(--sunk);border-bottom:1px solid var(--line);font-size:.85rem}
+.alert .wrap{display:flex;gap:.75rem;align-items:center;justify-content:space-between;padding-block:.55rem;flex-wrap:wrap}
+.alert strong{color:var(--crit);font-weight:600}
+.site-head{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--surface);border-bottom:1px solid var(--line)}
+.site-head .wrap{display:flex;align-items:center;gap:1.5rem;padding-block:.8rem}
+.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:var(--fg)}
+.brand svg{width:40px;height:42px;color:var(--fg)}
+.brand .wm{font:700 1.05rem/1 var(--f-ui);letter-spacing:.32em}
+.brand .tag{display:block;font:500 .58rem/1.3 var(--f-ui);letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:.25rem;max-width:22ch}
+.nav{display:flex;gap:1.35rem;margin-left:auto;font-size:.92rem;font-weight:500}
+.nav a{text-decoration:none;padding:.3rem 0;border-bottom:2px solid transparent}
+.nav a:hover{border-bottom-color:var(--gold)}
+.head-actions{display:flex;gap:.6rem;align-items:center}
+.menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:var(--r);padding:.55rem .7rem;color:var(--fg);font:600 .85rem var(--f-ui);cursor:pointer}
+@media (max-width:1020px){
+  .nav{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:var(--surface);border-bottom:1px solid var(--line);padding:.5rem var(--gut-r) 1rem var(--gut-l)}
+  .nav.open{display:flex}
+  .nav a{padding:.75rem 0;border-bottom:1px solid var(--line)}
+  .menu-btn{display:inline-block;margin-left:auto}
+  .head-actions .btn-line{display:none}
+}
+@media (max-width:520px){.brand .tag{display:none}.site-head .wrap{gap:.6rem}.brand .wm{letter-spacing:.18em;font-size:.95rem}.brand svg{width:32px;height:34px}.head-actions .btn-gold{padding:.6rem .7rem;font-size:.8rem}.hide-sm{display:none}}
+
+/* View */
+.view{display:none}
+.view.on{display:block}
+section{padding-block:3.5rem}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap;margin-bottom:1.75rem}
+.sec-head h2{font-size:var(--step-3)}
+.sec-head p{color:var(--muted);max-width:52ch}
+
+/* Hero beranda */
+.hero{padding-block:2.75rem 3rem;border-bottom:1px solid var(--line);background:var(--surface)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:2.5rem;align-items:center}
+.hero h1{font-size:clamp(2.1rem,4.6vw,var(--step-5));font-weight:500;line-height:1.05;margin:.9rem 0 1rem}
+.hero h1 a{text-decoration:none}
+.hero h1 a:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px;text-decoration-color:var(--gold)}
+.dek{font:400 var(--step-1)/1.5 var(--f-display);color:var(--muted);max-width:56ch}
+.byline{display:flex;gap:.75rem;align-items:center;margin-top:1.4rem;font-size:.88rem;color:var(--muted);flex-wrap:wrap}
+.byline b{color:var(--fg);font-weight:600}
+.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:600 .78rem var(--f-ui);background:var(--sunk);color:var(--fg);flex:none}
+.map{position:relative;border-radius:var(--r);overflow:hidden;background:var(--sunk);aspect-ratio:4/3;max-width:100%}
+.map canvas{position:absolute;inset:0;width:100%;height:100%}
+.map .cap{position:absolute;left:.75rem;bottom:.6rem;font:500 .7rem var(--f-mono);color:var(--muted);background:var(--surface);padding:.2rem .45rem;border-radius:3px}
+.hero-side{display:grid;gap:1rem}
+.cite-card{border-top:3px solid var(--gold);background:var(--paper);padding:1rem 1.1rem;font-size:.9rem}
+.cite-card .mono{color:var(--gold-ink);display:block;margin-bottom:.35rem}
+.cite-card q{font-family:var(--f-display);font-size:1.05rem;font-style:italic;quotes:"“" "”"}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr}}
+
+/* Tiga pilar */
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line);background:var(--surface);border-radius:var(--r)}
+.pillar{padding:1.6rem 1.5rem 1.4rem;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:.8rem}
+.pillar:last-child{border-right:0}
+.pillar h3{font-size:var(--step-2)}
+.pillar p{color:var(--muted);font-size:.93rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:auto}
+.chip{font:500 .74rem/1 var(--f-ui);padding:.42rem .6rem;border:1px solid var(--line);border-radius:99px;background:var(--paper);color:var(--fg);text-decoration:none;cursor:pointer}
+.chip:hover{border-color:var(--fg)}
+.pillar .count{font:500 .78rem var(--f-mono);color:var(--muted)}
+@media (max-width:860px){.pillars{grid-template-columns:1fr}.pillar{border-right:0;border-bottom:1px solid var(--line)}.pillar:last-child{border-bottom:0}}
+
+/* Indeks publikasi */
+.filters{display:flex;gap:.4rem;flex-wrap:wrap}
+.filters button{font:500 .82rem var(--f-ui);padding:.5rem .8rem;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--fg);color:var(--paper);border-color:var(--fg)}
+.feed{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem 1.75rem;margin-top:1.75rem}
+.card{display:flex;flex-direction:column;gap:.65rem;text-decoration:none;color:inherit;min-width:0}
+.card .map{aspect-ratio:16/10}
+.card h3{font-size:1.32rem;line-height:1.22}
+.card:hover h3{text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:4px}
+.card .meta{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap}
+.card .ex{color:var(--muted);font-size:.92rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .who{font-size:.82rem;color:var(--muted)}
+.card .who b{color:var(--fg);font-weight:600}
+.badge-guest{font:600 .66rem/1 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--gold-ink);border:1px solid currentColor;padding:.2rem .35rem;border-radius:3px;margin-left:.35rem}
+.empty{grid-column:1/-1;padding:2rem;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r)}
+@media (max-width:980px){.feed{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.feed{grid-template-columns:1fr}}
+
+/* Pantau kasus */
+.band{background:var(--band);color:var(--on-ink)}
+.band .sec-head p,.band .muted{color:rgba(243,238,227,.72)}
+.band .eyebrow{color:var(--gold)}
+.tbl-wrap{overflow-x:auto;border:1px solid rgba(243,238,227,.14);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:.9rem}
+th,td{text-align:left;padding:.85rem 1rem;border-bottom:1px solid rgba(243,238,227,.12);vertical-align:top}
+th{font:600 .7rem var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:rgba(243,238,227,.6)}
+tr:last-child td{border-bottom:0}
+.stage{display:flex;gap:3px;margin-top:.4rem}
+.stage i{display:block;height:5px;flex:1;min-width:22px;background:rgba(243,238,227,.18);border-radius:1px}
+.stage i.done{background:var(--gold)}
+.stage-l{font:500 .74rem var(--f-mono);color:rgba(243,238,227,.7)}
+.status{font:600 .72rem/1 var(--f-ui);padding:.35rem .55rem;border-radius:99px;display:inline-block;white-space:nowrap}
+.s-crit{background:rgba(229,148,145,.18);color:#F0B3B1}
+.s-warn{background:rgba(226,182,94,.18);color:#EBC67C}
+.s-ok{background:rgba(127,196,160,.18);color:#9ED3B7}
+.band .pill.hukum{color:#9FB7EC}.band .pill.ham{color:#F0A9A6}.band .pill.ling{color:#92CDAE}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:rgba(243,238,227,.14);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem}
+.stat{background:var(--band);padding:1.1rem 1.2rem}
+.stat b{display:block;font:500 2rem/1 var(--f-display);color:var(--on-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:.8rem;color:rgba(243,238,227,.7)}
+.note{font:400 .76rem var(--f-mono);color:rgba(243,238,227,.55);margin-top:.9rem}
+@media (max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Ajakan menulis */
+.write-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:3rem;align-items:start}
+.write-grid h2{font-size:var(--step-4);line-height:1.05}
+.flow{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:f}
+.flow li{display:grid;grid-template-columns:2.2rem minmax(0,1fr);gap:1rem;padding:1rem 0;border-bottom:1px solid var(--line);counter-increment:f}
+.flow li::before{content:counter(f);font:500 1.5rem/1 var(--f-display);color:var(--gold-ink)}
+.flow b{display:block;font-weight:600;margin-bottom:.15rem}
+.flow span{color:var(--muted);font-size:.92rem}
+.who-list{display:flex;flex-wrap:wrap;gap:.4rem;margin:1.25rem 0 1.5rem}
+@media (max-width:860px){.write-grid{grid-template-columns:1fr;gap:1.5rem}}
+
+/* Transparansi + buletin */
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.6rem}
+.panel h3{font-size:var(--step-2);margin-bottom:.5rem}
+.panel p{color:var(--muted);font-size:.93rem}
+.funds{display:grid;gap:.55rem;margin-top:1.1rem}
+.fund{display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr) 3.2rem;gap:.75rem;align-items:center;font-size:.84rem}
+.fund .bar{height:8px;background:var(--sunk);border-radius:2px;overflow:hidden}
+.fund .bar i{display:block;height:100%;background:var(--fg)}
+.fund .bar i.g{background:var(--gold)}
+.fund span:last-child{font:500 .8rem var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+.field{display:grid;gap:.35rem}
+.field label{font-size:.82rem;font-weight:600}
+input[type=text],input[type=email],textarea,select{font:400 .95rem var(--f-ui);padding:.7rem .8rem;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--fg);width:100%}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);outline-offset:0;border-color:transparent}
+.row{display:flex;gap:.6rem;flex-wrap:wrap}
+.row > input{flex:1 1 14rem;min-width:0}
+@media (max-width:760px){.duo{grid-template-columns:1fr}.fund{grid-template-columns:minmax(0,8rem) minmax(0,1fr) 3rem}}
+
+/* Footer */
+footer{background:var(--band);color:var(--on-ink);padding-block:3rem 2rem;margin-top:1rem}
+.foot{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:2rem}
+.foot svg{width:54px;height:56px;color:var(--on-ink)}
+.foot h4{font:600 .72rem var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.45rem;font-size:.9rem}
+.foot a{text-decoration:none;opacity:.85}
+.foot a:hover{opacity:1;text-decoration:underline}
+.foot p{font-size:.88rem;opacity:.75;margin-top:.8rem;max-width:40ch}
+.legal{border-top:1px solid rgba(243,238,227,.15);margin-top:2.5rem;padding-top:1.2rem;font-size:.78rem;opacity:.65;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+@media (max-width:860px){.foot{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.foot{grid-template-columns:1fr}}
+
+/* Halaman artikel */
+.art-head{background:var(--surface);border-bottom:1px solid var(--line);padding-block:2.5rem 2rem}
+.crumb{font-size:.82rem;color:var(--muted);display:flex;gap:.5rem;flex-wrap:wrap}
+.crumb a{text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.art-head h1{font-size:clamp(2rem,4.2vw,3.1rem);max-width:22ch;margin:1rem 0 .9rem;line-height:1.08}
+.art-head .dek{font-size:1.3rem;max-width:60ch}
+.art-layout{display:grid;grid-template-columns:minmax(0,10rem) minmax(0,var(--read)) minmax(0,17rem);gap:2.5rem;justify-content:center;padding-block:2.5rem}
+.art-rail{position:sticky;top:6rem;align-self:start;display:grid;gap:1rem;font-size:.82rem;color:var(--muted)}
+.art-rail button{font:500 .8rem var(--f-ui);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:.5rem .6rem;color:var(--fg);cursor:pointer;text-align:left}
+.prose{font:400 1.18rem/1.72 var(--f-display);min-width:0}
+.prose > * + *{margin-top:1.15em}
+.prose h2{font-size:1.65rem;margin-top:1.9em}
+.prose blockquote{margin:1.6em 0;padding:0 0 0 1.2rem;border-left:3px solid var(--gold);font-style:italic;font-size:1.32rem;line-height:1.5}
+.prose sup a{font:600 .7rem var(--f-ui);color:var(--gold-ink);text-decoration:none;padding:0 .1rem}
+.prose .lawref{font:500 .82em var(--f-mono);background:var(--sunk);padding:.08em .35em;border-radius:3px;white-space:nowrap}
+.prose p:first-of-type::first-letter{float:left;font-size:3.6em;line-height:.86;padding:.06em .1em 0 0;font-weight:500;color:var(--fg)}
+.fn{border-top:1px solid var(--line);padding-top:1rem;margin-top:2.5rem;font:400 .85rem/1.55 var(--f-ui);color:var(--muted)}
+.fn ol{padding-left:1.2rem;margin:.5rem 0 0;display:grid;gap:.4rem}
+.side{display:grid;gap:1.25rem;align-self:start;position:sticky;top:6rem}
+.side .panel{padding:1.15rem}
+.side h4{font:600 .72rem var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.laws{list-style:none;margin:0;padding:0;display:grid;gap:.75rem}
+.laws li{display:grid;gap:.2rem;font-size:.84rem}
+.laws .mono{color:var(--fg);font-size:.8rem}
+.laws .st{font:600 .68rem var(--f-ui);color:var(--ok);letter-spacing:.04em;text-transform:uppercase}
+.author{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1rem;margin-top:2.5rem;padding:1.3rem;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);font-family:var(--f-ui)}
+.author .avatar{width:52px;height:52px;font-size:1rem}
+.author p{font-size:.9rem;color:var(--muted);margin-top:.3rem}
+.reply{margin-top:1.25rem;padding:1.1rem 1.3rem;border:1px dashed var(--line);border-radius:var(--r);font:400 .9rem/1.5 var(--f-ui);color:var(--muted)}
+.reply b{color:var(--fg)}
+@media (max-width:1100px){.art-layout{grid-template-columns:minmax(0,var(--read)) minmax(0,16rem)}.art-rail{display:none}}
+@media (max-width:820px){.art-layout{grid-template-columns:minmax(0,1fr)}.side{position:static}}
+
+/* Ruang penulis */
+.studio{display:grid;grid-template-columns:minmax(0,13rem) minmax(0,1fr);min-height:70vh;border-top:1px solid var(--line)}
+.studio-nav{background:var(--surface);border-right:1px solid var(--line);padding:1.5rem 1rem;display:grid;align-content:start;gap:.25rem}
+.studio-nav .me{display:flex;gap:.6rem;align-items:center;padding:0 .5rem 1.2rem;margin-bottom:.6rem;border-bottom:1px solid var(--line);font-size:.85rem}
+.studio-nav .me small{display:block;color:var(--muted);font-size:.75rem}
+.studio-nav button{font:500 .9rem var(--f-ui);text-align:left;background:none;border:0;padding:.6rem .6rem;border-radius:var(--r);color:var(--fg);cursor:pointer;display:flex;justify-content:space-between}
+.studio-nav button[aria-current="true"]{background:var(--sunk);font-weight:600}
+.studio-nav .n{font:500 .75rem var(--f-mono);color:var(--muted)}
+.studio-main{padding:1.75rem clamp(16px,3vw,2.5rem) 3rem;min-width:0}
+.pane{display:none}.pane.on{display:block}
+.pipe{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.5rem;margin:1rem 0 1.75rem}
+.pipe div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:.8rem .9rem}
+.pipe b{display:block;font:500 1.6rem/1 var(--f-display);font-variant-numeric:tabular-nums}
+.pipe span{font-size:.78rem;color:var(--muted)}
+.subs{display:grid;gap:.6rem}
+.sub{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1rem 1.1rem}
+.sub h3{font-size:1.15rem;margin:.35rem 0 .3rem}
+.sub .m{font-size:.8rem;color:var(--muted)}
+.track{display:flex;gap:4px;margin-top:.6rem;max-width:22rem}
+.track i{flex:1;height:4px;background:var(--sunk);border-radius:1px}
+.track i.done{background:var(--gold)}
+.st-chip{font:600 .72rem/1 var(--f-ui);padding:.4rem .6rem;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+.st-draft{color:var(--muted)} .st-review{color:var(--warn);border-color:currentColor} .st-legal{color:var(--p-hukum);border-color:currentColor} .st-pub{color:var(--ok);border-color:currentColor} .st-rev{color:var(--crit);border-color:currentColor}
+@media (max-width:860px){.studio{grid-template-columns:1fr}.studio-nav{border-right:0;border-bottom:1px solid var(--line);grid-auto-flow:column;grid-auto-columns:max-content;overflow-x:auto;padding:.6rem}.studio-nav .me{display:none}.pipe{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:520px){.pipe{grid-template-columns:repeat(2,minmax(0,1fr))}.sub{grid-template-columns:1fr}}
+
+.editor-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,18rem);gap:1.75rem;align-items:start}
+.ed-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin-bottom:1rem}
+.ed-title{font:500 2rem/1.15 var(--f-display);border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;padding:.4rem 0;width:100%;color:var(--fg)}
+.ed-dek{font:400 1.15rem/1.45 var(--f-display);border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;padding:.5rem 0;width:100%;color:var(--muted);resize:vertical}
+.ed-title:focus,.ed-dek:focus{outline:none;border-bottom-color:var(--gold)}
+.toolbar{display:flex;flex-wrap:wrap;gap:.3rem;padding:.5rem;background:var(--surface);border:1px solid var(--line);border-bottom:0;border-radius:var(--r) var(--r) 0 0;margin-top:1.25rem;position:sticky;top:4.6rem;z-index:5}
+.toolbar button,.toolbar select{font:500 .8rem var(--f-ui);background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:.4rem .6rem;color:var(--fg);cursor:pointer;width:auto}
+.toolbar .sep{width:1px;background:var(--line);margin:0 .2rem}
+.ed-body{min-height:22rem;background:var(--surface);border:1px solid var(--line);border-radius:0 0 var(--r) var(--r);padding:1.25rem 1.4rem;font:400 1.12rem/1.7 var(--f-display);outline:none}
+.ed-body:focus{border-color:var(--gold)}
+.ed-body h2{font-size:1.5rem;margin:1.2em 0 .4em}
+.ed-body blockquote{border-left:3px solid var(--gold);margin:1em 0;padding-left:1rem;font-style:italic}
+.ed-body .lawref{font:500 .8em var(--f-mono);background:var(--sunk);padding:.05em .35em;border-radius:3px}
+.ed-body sup{font:600 .7rem var(--f-ui);color:var(--gold-ink)}
+.ed-foot{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font:500 .78rem var(--f-mono);color:var(--muted);margin-top:.6rem}
+.ed-side{display:grid;gap:1rem;position:sticky;top:5rem}
+.ed-side .panel{padding:1.1rem}
+.ed-side h4{font:600 .72rem var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
+.check{display:grid;gap:.6rem;font-size:.85rem}
+.check label{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.55rem;align-items:start;cursor:pointer}
+.check input{margin-top:.25rem;accent-color:var(--gold)}
+.radio{display:grid;gap:.45rem;font-size:.85rem}
+.radio label{display:flex;gap:.5rem;align-items:center;cursor:pointer}
+.radio input{accent-color:var(--gold)}
+.radio small{display:block;color:var(--muted);font-size:.76rem;margin-left:1.5rem;margin-top:-.25rem}
+@media (max-width:1060px){.editor-grid{grid-template-columns:1fr}.ed-side{position:static}}
+@media (max-width:620px){.ed-meta{grid-template-columns:1fr}}
+
+.guide{max-width:var(--read);display:grid;gap:1.25rem}
+.guide h3{font-size:var(--step-2)}
+.guide ul{margin:.4rem 0 0;padding-left:1.2rem;display:grid;gap:.35rem;color:var(--muted)}
+
+.toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(150%);background:var(--fg);color:var(--paper);padding:.75rem 1.1rem;border-radius:var(--r);font-size:.9rem;font-weight:500;z-index:80;transition:transform .25s ease,visibility .25s;max-width:calc(100% - 32px);visibility:hidden}
+.toast.show{transform:translateX(-50%) translateY(0);visibility:visible}
+
+/* Bantuan hukum */
+.help{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:3rem;padding-block:3rem}
+.help h1{font-size:clamp(2rem,4vw,3rem);line-height:1.08;margin:.8rem 0 1rem}
+.safe{margin-top:1.5rem;padding:1.1rem 1.2rem;background:var(--sunk);border-radius:var(--r);font-size:.9rem;display:grid;gap:.5rem}
+.safe b{font-weight:600}
+.steps{display:flex;gap:.4rem;margin-bottom:1.25rem}
+.steps span{flex:1;font:600 .72rem var(--f-ui);letter-spacing:.05em;text-transform:uppercase;padding-top:.55rem;border-top:3px solid var(--line);color:var(--muted)}
+.steps span.on{border-top-color:var(--gold);color:var(--fg)}
+.form{display:grid;gap:1rem}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media (max-width:860px){.help{grid-template-columns:1fr;gap:1.5rem}}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}}
+
+/* Dokumen konsep */
+.doc{display:grid;grid-template-columns:minmax(0,14rem) minmax(0,1fr);gap:3rem;padding-block:2.5rem 4rem}
+.toc{position:sticky;top:6rem;align-self:start;display:grid;gap:.2rem;font-size:.86rem}
+.toc a{text-decoration:none;color:var(--muted);padding:.35rem 0 .35rem .8rem;border-left:2px solid var(--line)}
+.toc a:hover{color:var(--fg);border-left-color:var(--gold)}
+.doc-body{min-width:0;display:grid;gap:3.25rem}
+.doc-body > header h1{font-size:clamp(2.2rem,4.5vw,3.4rem);line-height:1.04;margin:.7rem 0 1rem}
+.doc-body h2{font-size:var(--step-3);margin-bottom:1rem}
+.doc-body h3{font-size:1.2rem;margin:1.2rem 0 .4rem;font-family:var(--f-ui);font-weight:600;letter-spacing:0}
+.doc-body p,.doc-body li{color:var(--muted);max-width:68ch}
+.doc-body p + p{margin-top:.8rem}
+.doc-body ul,.doc-body ol{padding-left:1.2rem;display:grid;gap:.35rem;margin:.5rem 0 0}
+.goals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.25rem}
+.goals div{border-top:3px solid var(--fg);padding-top:.8rem}
+.goals b{display:block;font:500 1.2rem/1.25 var(--f-display);margin-bottom:.35rem;color:var(--fg)}
+.goals span{font-size:.9rem;color:var(--muted)}
+.personas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem}
+.persona{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem}
+.persona h3{margin:0 0 .25rem}
+.persona .q{font:italic 400 1.02rem/1.45 var(--f-display);color:var(--fg);margin:.6rem 0}
+.persona ul{font-size:.88rem}
+.tree{font:400 .84rem/1.75 var(--f-mono);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem 1.4rem;overflow-x:auto;white-space:pre;color:var(--fg);margin-top:1rem}
+.tree .c{color:var(--muted)}
+.tree .g{color:var(--gold-ink)}
+.wf{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;margin-top:1.25rem;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.wf div{padding:1rem .9rem;border-right:1px solid var(--line);font-size:.84rem;color:var(--muted)}
+.wf div:last-child{border-right:0}
+.wf b{display:block;color:var(--fg);font-weight:600;font-size:.9rem;margin:.35rem 0 .3rem}
+.wf .k{font:500 .7rem var(--f-mono);color:var(--gold-ink)}
+@media (max-width:980px){.wf{grid-template-columns:repeat(3,minmax(0,1fr))}.wf div:nth-child(3){border-right:0}.wf div:nth-child(-n+3){border-bottom:1px solid var(--line)}}
+@media (max-width:560px){.wf{grid-template-columns:1fr}.wf div{border-right:0;border-bottom:1px solid var(--line)}}
+.dtbl{overflow-x:auto;margin-top:1rem;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.dtbl table{min-width:640px;font-size:.86rem}
+.dtbl th,.dtbl td{border-bottom:1px solid var(--line);color:var(--fg)}
+.dtbl th{color:var(--muted)}
+.dtbl td{color:var(--muted)} .dtbl td:first-child{color:var(--fg);font-weight:600}
+.yes{color:var(--ok);font-weight:600}.no{color:var(--muted)}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(9.5rem,1fr));gap:.75rem;margin-top:1rem}
+.sw{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface);font-size:.8rem}
+.sw i{display:block;height:4.2rem}
+.sw div{padding:.6rem .7rem}
+.sw b{display:block;font-weight:600;color:var(--fg)}
+.sw span{font-family:var(--f-mono);color:var(--muted);font-size:.74rem}
+.specimen{display:grid;gap:1rem;margin-top:1rem}
+.spec{display:grid;grid-template-columns:minmax(0,9rem) minmax(0,1fr);gap:1rem;align-items:baseline;padding-bottom:1rem;border-bottom:1px solid var(--line)}
+.spec small{font:500 .74rem var(--f-mono);color:var(--muted)}
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1rem}
+.phase{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem}
+.phase .k{font:500 .74rem var(--f-mono);color:var(--gold-ink)}
+.phase h3{margin:.3rem 0 .5rem}
+.phase ul{font-size:.88rem}
+@media (max-width:900px){.doc{grid-template-columns:1fr}.toc{display:none}.goals,.phases{grid-template-columns:1fr}.personas{grid-template-columns:1fr}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="emblem" viewBox="188 232 226 240"><!--EMBLEM--></symbol></svg>
+
+<nav class="protobar" aria-label="Navigasi prototipe">
+  <div class="wrap">
+    <b>Prototipe</b>
+    <a href="#beranda" data-v="beranda">Beranda</a>
+    <a href="#artikel" data-v="artikel">Halaman Tulisan</a>
+    <a href="#penulis" data-v="penulis">Ruang Penulis</a>
+    <a href="#bantuan" data-v="bantuan">Minta Bantuan Hukum</a>
+    <a href="#konsep" data-v="konsep">Dokumen Konsep Desain</a>
+    <span class="sp"></span>
+    <button class="theme-btn" id="themeBtn" type="button">Tema: sistem</button>
+  </div>
+</nav>
+
+<div class="alert" role="note">
+  <div class="wrap">
+    <span><strong>Respons darurat 24 jam.</strong> Ditangkap, diperiksa polisi, atau diancam karena membela hak? Hubungi kami sejak tahap awal.</span>
+    <a href="#bantuan" class="btn btn-line" style="padding:.45rem .8rem;font-size:.8rem">Laporkan sekarang</a>
+  </div>
+</div>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#beranda" aria-label="LAKSANA, ke beranda">
+      <svg aria-hidden="true"><use href="#emblem"/></svg>
+      <span><span class="wm">LAKSANA</span><span class="tag">Lembaga Advokasi Keadilan Sosial dan Hak Asasi Manusia</span></span>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mainNav" type="button">Menu</button>
+    <nav class="nav" id="mainNav" aria-label="Navigasi utama">
+      <a href="#beranda" data-jump="publikasi">Publikasi</a>
+      <a href="#beranda" data-jump="isu">Isu</a>
+      <a href="#beranda" data-jump="kasus">Pantau Kasus</a>
+      <a href="#konsep" data-jump="tentang">Tentang</a>
+      <a href="#penulis">Ruang Penulis</a>
+    </nav>
+    <div class="head-actions">
+      <a href="#penulis" class="btn btn-line">Masuk</a>
+      <a href="#bantuan" class="btn btn-gold"><span><span class="hide-sm">Minta </span>Bantuan Hukum</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ================= BERANDA ================= -->
+<div class="view" id="v-beranda">
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="byline" style="margin:0;gap:1rem"><span class="pill ling">Lingkungan Hidup</span><span class="type">LAPORAN LAPANGAN</span></div>
+        <h1><a href="#artikel">Digugat karena Menolak Tambang: Ujian Pertama Perlindungan Anti-SLAPP di Pesisir</a></h1>
+        <p class="dek">Undang-undang menjamin warga yang memperjuangkan lingkungan hidup tidak dapat dituntut pidana maupun digugat perdata. Di lapangan, jaminan itu baru bekerja kalau ada yang mendampingi sejak hari pertama.</p>
+        <div class="byline"><span class="avatar">RS</span><span><b>Rahmi Saputri</b> · Advokat LAKSANA</span><span>·</span><span>12 menit baca</span><span>·</span><span>24 Nov 2026</span></div>
+      </div>
+      <div class="hero-side">
+        <div class="map"><canvas data-seed="7" data-pillar="ling"></canvas><span class="cap">ilustrasi kontur · wilayah dampingan</span></div>
+        <div class="cite-card"><span class="mono">UU 32/2009 · Pasal 66</span><q>Setiap orang yang memperjuangkan hak atas lingkungan hidup yang baik dan sehat tidak dapat dituntut secara pidana maupun digugat secara perdata.</q></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="isu">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="base">Tiga bidang kerja</h2><p>Setiap tulisan, perkara, dan data di situs ini ditandai dengan salah satu bidang, sehingga pembaca bisa mengikuti isu yang mereka pedulikan.</p></div>
+      <div class="pillars">
+        <div class="pillar">
+          <span class="pill hukum">Hukum</span>
+          <h3>Bantuan hukum dan pembaruan hukum</h3>
+          <p>Pendampingan perkara cuma-cuma, pengujian peraturan, dan pemantauan penerapan KUHP serta KUHAP baru yang berlaku sejak 2 Januari 2026.</p>
+          <span class="count">48 publikasi · 61 perkara didampingi</span>
+          <div class="chips"><button class="chip" data-f-pillar="hukum">KUHAP baru</button><button class="chip" data-f-pillar="hukum">Pengujian UU</button><button class="chip" data-f-pillar="hukum">Paralegal</button></div>
+        </div>
+        <div class="pillar">
+          <span class="pill ham">Hak Asasi Manusia</span>
+          <h3>HAM, hak digital, dan kebebasan sipil</h3>
+          <p>Dokumentasi pelanggaran, pembelaan warga yang dikriminalisasi karena berekspresi, dan laporan bayangan ke mekanisme HAM internasional.</p>
+          <span class="count">35 publikasi · 22 perkara didampingi</span>
+          <div class="chips"><button class="chip" data-f-pillar="ham">Kriminalisasi</button><button class="chip" data-f-pillar="ham">Kebebasan berekspresi</button><button class="chip" data-f-pillar="ham">Pembela HAM</button></div>
+        </div>
+        <div class="pillar">
+          <span class="pill ling">Lingkungan Hidup</span>
+          <h3>Keadilan agraria dan lingkungan</h3>
+          <p>Konflik tanah, hutan adat, tambang, dan tata ruang. Perlindungan anti-SLAPP bagi warga yang mempertahankan ruang hidupnya.</p>
+          <span class="count">41 publikasi · 27 perkara didampingi</span>
+          <div class="chips"><button class="chip" data-f-pillar="ling">Anti-SLAPP</button><button class="chip" data-f-pillar="ling">Masyarakat adat</button><button class="chip" data-f-pillar="ling">Tata ruang</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="publikasi" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="base">Publikasi terbaru</h2>
+        <div class="filters" role="group" aria-label="Saring jenis tulisan" id="typeFilters">
+          <button type="button" aria-pressed="true" data-type="semua">Semua</button>
+          <button type="button" aria-pressed="false" data-type="Analisis Hukum">Analisis Hukum</button>
+          <button type="button" aria-pressed="false" data-type="Opini">Opini</button>
+          <button type="button" aria-pressed="false" data-type="Laporan Lapangan">Laporan Lapangan</button>
+          <button type="button" aria-pressed="false" data-type="Kertas Posisi">Kertas Posisi</button>
+          <button type="button" aria-pressed="false" data-type="Siaran Pers">Siaran Pers</button>
+        </div>
+      </div>
+      <p class="eyebrow" id="feedNote">Menampilkan semua bidang</p>
+      <div class="feed" id="feed"></div>
+    </div>
+  </section>
+
+  <section class="band" id="kasus">
+    <div class="wrap">
+      <div class="sec-head"><div><p class="eyebrow">Unit Data</p><h2 style="margin-top:.5rem">Pantau Kasus</h2></div><p>Setiap perkara yang kami dampingi dicatat dengan format yang sama, lalu diolah menjadi bahan advokasi kebijakan. Identitas korban tidak pernah ditampilkan.</p></div>
+      <div class="stats">
+        <div class="stat"><b>110</b><span>perkara didampingi tahun ini</span></div>
+        <div class="stat"><b>82%</b><span>didampingi sejak penyidikan</span></div>
+        <div class="stat"><b>14</b><span>pembela HAM dikriminalisasi</span></div>
+        <div class="stat"><b>8</b><span>simpul komunitas aktif</span></div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Perkara</th><th>Bidang</th><th>Tahap</th><th>Status</th><th>Pembaruan</th></tr></thead>
+          <tbody id="caseRows"></tbody>
+        </table>
+      </div>
+      <p class="note">Data contoh untuk prototipe. Di situs nyata, tabel ini terhubung ke basis data kasus terstandar.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap write-grid">
+      <div>
+        <p class="eyebrow">Untuk penulis</p>
+        <h2 style="margin:.6rem 0 1rem">Tulisanmu bisa menjadi bagian dari pembelaan.</h2>
+        <p class="dek" style="font-size:1.1rem">Kami membuka ruang bagi siapa pun yang punya pengetahuan atau pengalaman tentang ketidakadilan hukum, HAM, dan lingkungan. Editor dan advokat kami membantu memeriksa fakta dan dasar hukumnya sebelum terbit.</p>
+        <div class="who-list"><span class="chip">Advokat</span><span class="chip">Akademisi</span><span class="chip">Paralegal</span><span class="chip">Jurnalis</span><span class="chip">Mahasiswa hukum</span><span class="chip">Warga terdampak</span></div>
+        <div class="row"><a href="#penulis" class="btn btn-ink">Mulai menulis</a><a href="#penulis" class="btn btn-line" data-pane="pedoman">Baca pedoman</a></div>
+      </div>
+      <ol class="flow">
+        <li><div><b>Tulis draf di Ruang Penulis</b><span>Editor teks dengan alat catatan kaki dan sisipan dasar hukum. Draf tersimpan otomatis.</span></div></li>
+        <li><div><b>Ajukan ke meja redaksi</b><span>Pilih bidang dan jenis tulisan. Kamu boleh memakai nama pena atau tampil anonim.</span></div></li>
+        <li><div><b>Telaah editor</b><span>Masukan tentang struktur, kejelasan, dan keselamatan narasumber dalam 7 hari kerja.</span></div></li>
+        <li><div><b>Cek fakta dan dasar hukum</b><span>Advokat memeriksa pasal yang dirujuk dan risiko hukum bagi penulis.</span></div></li>
+        <li><div><b>Terbit dan disebarkan</b><span>Tulisan masuk buletin, kanal media sosial, dan arsip tematik LAKSANA.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap duo">
+      <div class="panel" id="transparansi">
+        <h3>Transparansi pendanaan</h3>
+        <p>Batas tegas kami: tidak ada satu donor pun yang menyumbang lebih dari 30% anggaran tahunan. Laporan keuangan teraudit dan daftar donor institusional dipublikasikan setiap tahun.</p>
+        <div class="funds" aria-label="Komposisi target pendanaan">
+          <div class="fund"><span>Hibah filantropi &amp; internasional</span><span class="bar"><i style="width:45%"></i></span><span>≤45%</span></div>
+          <div class="fund"><span>Donasi publik</span><span class="bar"><i class="g" style="width:20%"></i></span><span>≥20%</span></div>
+          <div class="fund"><span>Kerja sama kampus &amp; riset</span><span class="bar"><i style="width:15%"></i></span><span>±15%</span></div>
+          <div class="fund"><span>Dana bantuan hukum negara</span><span class="bar"><i style="width:10%"></i></span><span>≤10%</span></div>
+          <div class="fund"><span>Dana abadi &amp; unit usaha</span><span class="bar"><i style="width:10%"></i></span><span>±10%</span></div>
+        </div>
+        <div class="row" style="margin-top:1.25rem"><a class="btn btn-gold" href="#konsep" data-jump="donasi">Dukung LAKSANA</a><a class="btn btn-line" href="#konsep">Laporan tahunan</a></div>
+      </div>
+      <div class="panel">
+        <h3>Buletin Laksana</h3>
+        <p>Ringkasan dua mingguan: putusan penting, analisis peraturan baru, dan kabar dari simpul komunitas. Tanpa pelacak pihak ketiga.</p>
+        <form class="form" id="newsForm" style="margin-top:1.1rem">
+          <div class="field"><label for="nlEmail">Alamat email</label>
+          <div class="row"><input type="email" id="nlEmail" placeholder="nama@contoh.id" required><button class="btn btn-ink" type="submit">Berlangganan</button></div></div>
+          <div class="radio" role="group" aria-label="Pilih bidang">
+            <label><input type="checkbox" id="nlH" checked> Hukum</label>
+            <label><input type="checkbox" id="nlHam" checked> Hak Asasi Manusia</label>
+            <label><input type="checkbox" id="nlL" checked> Lingkungan Hidup</label>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= ARTIKEL ================= -->
+<div class="view" id="v-artikel">
+  <div class="art-head">
+    <div class="wrap">
+      <div class="crumb"><a href="#beranda">Beranda</a><span>/</span><a href="#beranda" data-jump="publikasi">Lingkungan Hidup</a><span>/</span><span>Laporan Lapangan</span></div>
+      <h1>Digugat karena Menolak Tambang: Ujian Pertama Perlindungan Anti-SLAPP di Pesisir</h1>
+      <p class="dek">Undang-undang menjamin warga yang memperjuangkan lingkungan hidup tidak dapat dituntut pidana maupun digugat perdata. Di lapangan, jaminan itu baru bekerja kalau ada yang mendampingi sejak hari pertama.</p>
+      <div class="byline"><span class="avatar">RS</span><span><b>Rahmi Saputri</b> · Advokat, Divisi Litigasi</span><span>·</span><span>24 November 2026</span><span>·</span><span>12 menit baca</span><span class="pill ling" style="margin-left:.4rem">Lingkungan Hidup</span></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="art-layout">
+      <aside class="art-rail" aria-label="Alat baca">
+        <span class="eyebrow">Bagikan</span>
+        <button type="button" data-copy>Salin tautan</button>
+        <button type="button" data-size>Perbesar teks</button>
+        <span class="eyebrow" style="margin-top:.5rem">Dalam tulisan</span>
+        <span>Konteks</span><span>Pasal 66 di ruang sidang</span><span>Pelajaran</span>
+      </aside>
+      <article class="prose" id="prose">
+        <p>Surat panggilan itu datang tiga minggu setelah warga memasang spanduk penolakan di tepi pantai. Dua nelayan dilaporkan dengan tuduhan menghalangi kegiatan usaha, sementara kelompok tani tambak menerima gugatan perdata dengan nilai ganti rugi yang tidak mungkin mereka bayar.</p>
+        <p>Pola ini dikenal sebagai <em>strategic lawsuit against public participation</em> atau SLAPP: proses hukum yang dipakai bukan untuk dimenangkan, tetapi untuk menguras tenaga dan membungkam warga. Hukum Indonesia sebenarnya sudah menyediakan penangkalnya sejak 2009.<sup><a href="#fn1" id="r1">1</a></sup></p>
+        <h2>Pasal 66 di ruang sidang</h2>
+        <p>Rumusan <span class="lawref">Pasal 66 UU 32/2009</span> pendek dan tegas. Persoalannya ada pada pembuktian: siapa yang dianggap sedang "memperjuangkan hak atas lingkungan hidup", dan pada tahap apa perlindungan itu bisa diajukan. Mahkamah Agung kemudian memberi pedoman bahwa hakim dapat memeriksa dalil anti-SLAPP sejak awal perkara.<sup><a href="#fn2" id="r2">2</a></sup></p>
+        <blockquote>Perlindungan yang tidak diajukan sama dengan perlindungan yang tidak ada. Karena itu pendampingan harus dimulai saat surat panggilan pertama tiba, bukan saat sidang.</blockquote>
+        <p>Dalam perkara ini, tim kami mengajukan keberatan sejak pemeriksaan pertama di kepolisian, dengan melampirkan bukti partisipasi warga dalam konsultasi publik dokumen lingkungan. Strategi ini sejalan dengan KUHAP baru yang memperluas hak tersangka untuk didampingi sejak tahap penyidikan.<sup><a href="#fn3" id="r3">3</a></sup></p>
+        <h2>Pelajaran bagi simpul komunitas</h2>
+        <p>Dari pendampingan ini kami mencatat tiga hal yang bisa dilakukan komunitas sebelum ada ancaman hukum: mendokumentasikan setiap keterlibatan dalam konsultasi publik, menyimpan salinan surat keberatan yang pernah dikirim, dan menunjuk satu orang penghubung yang tahu harus menghubungi siapa ketika panggilan datang.</p>
+        <p>Catatan perkara ini juga masuk ke basis data kasus LAKSANA, sehingga polanya bisa dibandingkan dengan perkara serupa di wilayah lain dan dipakai dalam advokasi kebijakan daerah.</p>
+        <div class="fn" id="fns">
+          <span class="eyebrow">Catatan kaki</span>
+          <ol>
+            <li id="fn1">Undang-Undang Nomor 32 Tahun 2009 tentang Perlindungan dan Pengelolaan Lingkungan Hidup, Pasal 66. <a href="#r1">↩</a></li>
+            <li id="fn2">Peraturan Mahkamah Agung Nomor 1 Tahun 2023 tentang Pedoman Mengadili Perkara Lingkungan Hidup. <a href="#r2">↩</a></li>
+            <li id="fn3">Undang-Undang Nomor 20 Tahun 2025 tentang Kitab Undang-Undang Hukum Acara Pidana, berlaku sejak 2 Januari 2026. <a href="#r3">↩</a></li>
+          </ol>
+        </div>
+        <div class="author">
+          <span class="avatar">RS</span>
+          <div><b style="font-weight:600">Rahmi Saputri</b><p>Advokat di Divisi Litigasi dan Bantuan Hukum LAKSANA. Menangani perkara agraria dan lingkungan di wilayah pesisir. Tulisan lain: 6.</p></div>
+        </div>
+        <div class="reply"><b>Hak jawab.</b> Pihak yang disebut dalam tulisan ini dapat mengajukan tanggapan melalui formulir hak jawab. Tanggapan yang memenuhi pedoman akan dimuat utuh di bawah tulisan.</div>
+        <p class="type" style="margin-top:1.25rem">Konten contoh untuk prototipe. Nama dan peristiwa bersifat ilustratif.</p>
+      </article>
+      <aside class="side" aria-label="Informasi pendukung">
+        <div class="panel">
+          <h4>Dasar hukum dirujuk</h4>
+          <ul class="laws">
+            <li><span class="mono">UU 32/2009 Ps. 66</span><span>Perlindungan pejuang lingkungan hidup</span><span class="st">Berlaku</span></li>
+            <li><span class="mono">Perma 1/2023</span><span>Pedoman mengadili perkara lingkungan</span><span class="st">Berlaku</span></li>
+            <li><span class="mono">UU 20/2025 (KUHAP)</span><span>Hak didampingi sejak penyidikan</span><span class="st">Berlaku sejak 2 Jan 2026</span></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h4>Perkara terkait</h4>
+          <p style="font-size:.88rem;color:var(--muted)">Kriminalisasi nelayan penolak tambang pasir</p>
+          <p class="type" style="margin-top:.5rem">TAHAP: PENYIDIKAN · DIDAMPINGI</p>
+          <a href="#beranda" data-jump="kasus" class="btn btn-line" style="margin-top:.9rem;font-size:.8rem;padding:.5rem .75rem">Lihat di Pantau Kasus</a>
+        </div>
+        <div class="panel">
+          <h4>Butuh bantuan serupa?</h4>
+          <p style="font-size:.88rem;color:var(--muted)">Konsultasi gratis untuk warga yang menghadapi ancaman hukum karena membela lingkungan.</p>
+          <a href="#bantuan" class="btn btn-gold" style="margin-top:.9rem;font-size:.82rem">Minta bantuan hukum</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RUANG PENULIS ================= -->
+<div class="view" id="v-penulis">
+  <div class="studio">
+    <nav class="studio-nav" aria-label="Menu ruang penulis">
+      <div class="me"><span class="avatar">DA</span><div><b>Dimas Arya</b><small>Kontributor · 3 tulisan terbit</small></div></div>
+      <button type="button" data-pane="tulisan" aria-current="true">Tulisan saya <span class="n" id="nSubs">4</span></button>
+      <button type="button" data-pane="tulis">Tulis baru</button>
+      <button type="button" data-pane="pedoman">Pedoman menulis</button>
+      <button type="button" data-pane="profil">Profil penulis</button>
+    </nav>
+    <div class="studio-main">
+      <div class="pane on" id="p-tulisan">
+        <div class="sec-head" style="margin-bottom:0"><div><p class="eyebrow">Ruang Penulis</p><h2 style="font-size:var(--step-3);margin-top:.4rem">Tulisan saya</h2></div><button class="btn btn-gold" type="button" data-pane="tulis">Tulis baru</button></div>
+        <div class="pipe" id="pipe"></div>
+        <div class="subs" id="subs"></div>
+      </div>
+
+      <div class="pane" id="p-tulis">
+        <div class="editor-grid">
+          <div style="min-width:0">
+            <div class="ed-meta">
+              <div class="field"><label for="edPillar">Bidang</label><select id="edPillar"><option value="hukum">Hukum</option><option value="ham">Hak Asasi Manusia</option><option value="ling" selected>Lingkungan Hidup</option></select></div>
+              <div class="field"><label for="edType">Jenis tulisan</label><select id="edType"><option>Opini</option><option>Analisis Hukum</option><option>Laporan Lapangan</option><option>Kertas Posisi</option></select></div>
+              <div class="field"><label for="edTags">Kata kunci</label><input type="text" id="edTags" placeholder="mis. tata ruang, banjir"></div>
+            </div>
+            <label class="sr" for="edTitle">Judul</label>
+            <input class="ed-title" id="edTitle" type="text" placeholder="Judul tulisan" value="Banjir Bukan Takdir: Tanggung Jawab Negara atas Tata Ruang">
+            <label class="sr" for="edDek">Ringkasan</label>
+            <textarea class="ed-dek" id="edDek" rows="2" placeholder="Ringkasan satu atau dua kalimat">Ketika izin diterbitkan di kawasan resapan air, banjir menjadi akibat kebijakan. Warga berhak menuntut pertanggungjawaban.</textarea>
+            <div class="toolbar" role="toolbar" aria-label="Format teks">
+              <button type="button" data-cmd="bold" title="Tebal"><b>B</b></button>
+              <button type="button" data-cmd="italic" title="Miring"><i>I</i></button>
+              <button type="button" data-cmd="h2">Subjudul</button>
+              <button type="button" data-cmd="quote">Kutipan</button>
+              <span class="sep"></span>
+              <button type="button" id="fnBtn">+ Catatan kaki</button>
+              <label class="sr" for="lawSel">Sisipkan dasar hukum</label>
+              <select id="lawSel">
+                <option value="">+ Dasar hukum…</option>
+                <option>UUD NRI 1945 Ps. 28H</option>
+                <option>UU 39/1999 tentang HAM</option>
+                <option>UU 32/2009 Ps. 66</option>
+                <option>UU 26/2007 tentang Penataan Ruang</option>
+                <option>UU 16/2011 tentang Bantuan Hukum</option>
+                <option>UU 1/2023 (KUHP)</option>
+                <option>UU 20/2025 (KUHAP)</option>
+              </select>
+            </div>
+            <div class="ed-body" id="edBody" contenteditable="true" spellcheck="true" aria-label="Isi tulisan" role="textbox" aria-multiline="true">
+              <p>Setiap musim hujan, berita banjir ditulis seolah-olah tentang cuaca. Padahal banyak genangan bermula dari keputusan di atas meja: izin perumahan di kawasan resapan, alih fungsi sawah, dan saluran yang tidak pernah direncanakan.</p>
+              <h2>Kewajiban yang sering dilupakan</h2>
+              <p>Hak atas lingkungan hidup yang baik dan sehat dijamin konstitusi <span class="lawref">UUD NRI 1945 Ps. 28H</span>. Rencana tata ruang adalah alat negara untuk memenuhinya, bukan sekadar dokumen administratif.<sup>1</sup></p>
+            </div>
+            <div class="ed-foot"><span id="wc">0 kata · 1 menit baca</span><span id="saved">Belum disimpan</span></div>
+            <div class="fn" style="margin-top:1.25rem"><span class="eyebrow">Catatan kaki</span><ol id="edFns"><li contenteditable="true">Undang-Undang Nomor 26 Tahun 2007 tentang Penataan Ruang.</li></ol></div>
+          </div>
+          <aside class="ed-side">
+            <div class="panel">
+              <h4>Status</h4>
+              <span class="st-chip st-draft" id="edStatus">Draf</span>
+              <div class="track" id="edTrack" style="max-width:none"><i class="done"></i><i></i><i></i><i></i><i></i></div>
+              <p class="type" style="margin-top:.5rem">DRAF → DIAJUKAN → TELAAH EDITOR → CEK HUKUM → TERBIT</p>
+            </div>
+            <div class="panel">
+              <h4>Identitas penulis</h4>
+              <div class="radio" role="radiogroup" aria-label="Identitas penulis">
+                <label><input type="radio" name="idt" id="idtReal" checked> Nama asli</label>
+                <label><input type="radio" name="idt" id="idtPen"> Nama pena</label>
+                <label><input type="radio" name="idt" id="idtAnon"> Anonim</label>
+                <small>Identitasmu hanya diketahui editor penanggung jawab.</small>
+              </div>
+            </div>
+            <div class="panel">
+              <h4>Sebelum mengajukan</h4>
+              <div class="check" id="checks">
+                <label><input type="checkbox" id="c1"> Fakta dan angka sudah disertai sumber.</label>
+                <label><input type="checkbox" id="c2"> Identitas korban dan saksi sudah disamarkan.</label>
+                <label><input type="checkbox" id="c3"> Pasal yang dirujuk sudah dicek status berlakunya.</label>
+                <label><input type="checkbox" id="c4"> Tulisan ini karya asli dan belum terbit di tempat lain.</label>
+              </div>
+              <div class="row" style="margin-top:1rem">
+                <button class="btn btn-line" type="button" id="saveBtn">Simpan draf</button>
+                <button class="btn btn-gold" type="button" id="submitBtn" disabled>Ajukan ke editor</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <div class="pane" id="p-pedoman">
+        <div class="guide">
+          <div><p class="eyebrow">Pedoman menulis</p><h2 style="font-size:var(--step-3);margin-top:.4rem">Menulis untuk keadilan, dengan aman</h2></div>
+          <div><h3>Apa yang kami terbitkan</h3><ul><li><b>Opini</b>: 800–1.200 kata, satu argumen yang jelas.</li><li><b>Analisis Hukum</b>: 1.200–2.500 kata, membedah peraturan atau putusan, wajib catatan kaki.</li><li><b>Laporan Lapangan</b>: kisah dari wilayah dampingan, disertai konteks hukumnya.</li><li><b>Kertas Posisi</b>: ditulis bersama tim LAKSANA, berisi rekomendasi kebijakan.</li></ul></div>
+          <div><h3>Keselamatan narasumber</h3><ul><li>Samarkan nama, wajah, dan lokasi spesifik korban yang masih berproses hukum.</li><li>Jangan mengunggah dokumen perkara asli tanpa izin pemiliknya.</li><li>Jika tulisanmu berisiko bagi dirimu, pilih nama pena atau anonim. Editor akan menilai risikonya bersamamu.</li></ul></div>
+          <div><h3>Gaya bahasa</h3><ul><li>Tulis untuk warga, bukan untuk sesama ahli hukum. Jelaskan istilah teknis saat pertama muncul.</li><li>Gunakan bahasa yang menghormati martabat: "warga yang dimiskinkan", bukan "orang miskin".</li><li>Rujuk peraturan dengan format: jenis, nomor/tahun, pasal. Contoh: <span class="mono">UU 39/1999 Ps. 17</span>.</li></ul></div>
+          <div><h3>Waktu telaah</h3><ul><li>Telaah editor: paling lama 7 hari kerja.</li><li>Cek hukum: 3–5 hari kerja untuk analisis hukum dan laporan perkara.</li><li>Penulis tamu menerima honorarium sesuai kebijakan redaksi.</li></ul></div>
+        </div>
+      </div>
+
+      <div class="pane" id="p-profil">
+        <div class="guide">
+          <div><p class="eyebrow">Profil penulis</p><h2 style="font-size:var(--step-3);margin-top:.4rem">Tampil di halaman penulis</h2></div>
+          <div class="field"><label for="pfName">Nama tampil</label><input type="text" id="pfName" value="Dimas Arya"></div>
+          <div class="field"><label for="pfRole">Afiliasi</label><input type="text" id="pfRole" value="Peneliti hukum tata ruang, simpul kampus Yogyakarta"></div>
+          <div class="field"><label for="pfBio">Bio singkat</label><textarea id="pfBio" rows="3">Menulis tentang tata ruang, banjir perkotaan, dan hak warga atas lingkungan hidup.</textarea></div>
+          <div><button class="btn btn-ink" type="button" id="pfSave">Simpan profil</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= BANTUAN HUKUM ================= -->
+<div class="view" id="v-bantuan">
+  <div class="wrap help">
+    <div>
+      <p class="eyebrow">Layanan cuma-cuma</p>
+      <h1 class="base">Minta bantuan hukum</h1>
+      <p class="dek">Bantuan hukum adalah hak konstitusional, bukan belas kasihan. Kami mendampingi warga yang dimiskinkan dan dipinggirkan, terutama dalam perkara agraria, lingkungan, ketenagakerjaan, dan kebebasan berekspresi.</p>
+      <div class="safe">
+        <b>Keamanan datamu</b>
+        <span>Formulir dikirim lewat koneksi terenkripsi dan hanya dibaca tim penerima pengaduan. Kamu boleh tidak mencantumkan nama asli.</span>
+        <span>Dalam keadaan darurat (sedang ditangkap atau diperiksa), pilih "Darurat" agar tim respons 24 jam menghubungimu lebih dulu.</span>
+      </div>
+    </div>
+    <form class="form panel" id="helpForm">
+      <div class="steps" aria-hidden="true"><span class="on">1 · Masalah</span><span>2 · Kontak</span><span>3 · Kirim</span></div>
+      <div class="grid2">
+        <div class="field"><label for="hUrg">Tingkat urgensi</label><select id="hUrg"><option>Biasa</option><option>Mendesak (sidang/pemeriksaan &lt; 7 hari)</option><option>Darurat (sedang ditangkap/diperiksa)</option></select></div>
+        <div class="field"><label for="hCat">Jenis masalah</label><select id="hCat"><option>Agraria dan lingkungan</option><option>Pidana (dilaporkan/ditangkap)</option><option>Ketenagakerjaan</option><option>Ekspresi dan hak digital</option><option>Lainnya</option></select></div>
+      </div>
+      <div class="field"><label for="hStory">Ceritakan singkat apa yang terjadi</label><textarea id="hStory" rows="5" placeholder="Kapan dan di mana, siapa saja yang terlibat, dan dokumen apa yang sudah kamu terima (mis. surat panggilan)."></textarea></div>
+      <div class="grid2">
+        <div class="field"><label for="hName">Nama atau nama samaran</label><input type="text" id="hName"></div>
+        <div class="field"><label for="hLoc">Kabupaten/kota</label><input type="text" id="hLoc" placeholder="mis. Kab. Demak"></div>
+      </div>
+      <div class="field"><label for="hContact">Cara aman menghubungimu</label><input type="text" id="hContact" placeholder="Nomor Signal/WhatsApp atau email"></div>
+      <button class="btn btn-gold" type="submit" style="justify-self:start">Kirim pengaduan</button>
+      <p class="type">Prototipe: formulir tidak mengirim data ke mana pun.</p>
+    </form>
+  </div>
+</div>
+
+<!-- ================= DOKUMEN KONSEP ================= -->
+<div class="view" id="v-konsep">
+  <div class="wrap doc">
+    <nav class="toc" aria-label="Daftar isi konsep">
+      <a href="#k-tujuan" data-anchor>1. Tujuan situs</a>
+      <a href="#k-audiens" data-anchor>2. Audiens</a>
+      <a href="#k-ia" data-anchor>3. Arsitektur informasi</a>
+      <a href="#k-editorial" data-anchor>4. Alur editorial</a>
+      <a href="#k-peran" data-anchor>5. Peran dan hak akses</a>
+      <a href="#k-desain" data-anchor>6. Sistem desain</a>
+      <a href="#k-aman" data-anchor>7. Keamanan dan privasi</a>
+      <a href="#k-teknologi" data-anchor>8. Teknologi</a>
+      <a href="#k-tahap" data-anchor>9. Tahapan pengembangan</a>
+    </nav>
+    <div class="doc-body">
+      <header id="tentang">
+        <p class="eyebrow">Dokumen konsep desain · November 2026</p>
+        <h1>Website LAKSANA: ruang baca publik dan ruang kerja penulis</h1>
+        <p class="dek">Konsep ini menurunkan rancangan pembentukan LAKSANA ke dalam sebuah situs. Tiga ciri pembeda lembaga (fokus tematik, simpul komunitas, dan unit data) menjadi tiga tulang punggung situs: bidang isu, ruang penulis, dan Pantau Kasus.</p>
+      </header>
+
+      <div id="k-tujuan">
+        <h2 class="base">1. Tujuan situs</h2>
+        <div class="goals">
+          <div><b>Membuka akses keadilan</b><span>Warga yang butuh bantuan menemukan tombol pengaduan dalam satu ketukan dari halaman mana pun, termasuk jalur darurat 24 jam.</span></div>
+          <div><b>Menjadi rujukan pengetahuan</b><span>Analisis hukum, kertas posisi, dan laporan lapangan yang dapat dipercaya karena setiap rujukan pasal diperiksa advokat.</span></div>
+          <div><b>Menggerakkan penulis</b><span>Akademisi, paralegal, jurnalis, dan warga terdampak bisa menulis, diajukan, ditelaah, dan diterbitkan dalam satu alur yang jelas.</span></div>
+        </div>
+      </div>
+
+      <div id="k-audiens">
+        <h2 class="base">2. Audiens utama</h2>
+        <div class="personas">
+          <div class="persona"><span class="pill ling">Pencari bantuan</span><h3>Warga terdampak</h3><p class="q">"Saya dapat surat panggilan polisi karena ikut demo tolak tambang. Apa yang harus saya lakukan?"</p><ul><li>Mengakses dari ponsel, sering dengan sinyal lemah.</li><li>Butuh bahasa sederhana dan jaminan kerahasiaan.</li><li>Situs harus ringan dan bisa dibuka tanpa memuat skrip berat.</li></ul></div>
+          <div class="persona"><span class="pill hukum">Pembaca</span><h3>Mahasiswa, jurnalis, pembuat kebijakan</h3><p class="q">"Saya perlu analisis KUHAP baru yang bisa saya kutip, lengkap dengan dasar hukumnya."</p><ul><li>Mencari berdasarkan isu, jenis tulisan, dan peraturan.</li><li>Butuh sitasi rapi dan tanggal pembaruan yang jelas.</li></ul></div>
+          <div class="persona"><span class="pill ham">Penulis</span><h3>Kontributor dan penulis tamu</h3><p class="q">"Saya ingin menulis tentang kasus di kampung saya, tapi takut nama saya dikenali."</p><ul><li>Butuh editor yang mudah, pilihan nama pena/anonim, dan status telaah yang transparan.</li><li>Ingin tahu kapan tulisannya terbit dan bagaimana dibaca.</li></ul></div>
+          <div class="persona"><span class="pill hukum">Internal</span><h3>Editor dan advokat LAKSANA</h3><p class="q">"Saya harus memastikan tulisan tidak membahayakan klien yang perkaranya masih berjalan."</p><ul><li>Butuh antrean telaah, catatan revisi, dan tahap cek hukum terpisah.</li><li>Menghubungkan tulisan dengan entri Pantau Kasus.</li></ul></div>
+        </div>
+      </div>
+
+      <div id="k-ia">
+        <h2 class="base">3. Arsitektur informasi</h2>
+        <p>Navigasi utama dibuat pendek. Tombol "Minta Bantuan Hukum" selalu tampil di kepala halaman, terpisah dari menu, karena itu tindakan paling penting bagi pengunjung yang sedang dalam masalah.</p>
+<div class="tree">laksana.or.id
+├── <span class="g">Beranda</span>           <span class="c">laporan utama · 3 bidang · publikasi terbaru · Pantau Kasus · ajakan menulis</span>
+├── Publikasi
+│   ├── Analisis Hukum · Opini · Laporan Lapangan · Kertas Posisi · Siaran Pers
+│   └── [tulisan]       <span class="c">catatan kaki · dasar hukum dirujuk · perkara terkait · hak jawab</span>
+├── Isu
+│   ├── Hukum           <span class="c">KUHAP baru · pengujian UU · paralegal</span>
+│   ├── HAM             <span class="c">kriminalisasi · hak digital · kebebasan sipil</span>
+│   └── Lingkungan      <span class="c">agraria · masyarakat adat · anti-SLAPP · tata ruang</span>
+├── Pantau Kasus        <span class="c">basis data perkara terstandar, peta, unduhan data terbuka</span>
+├── Penulis             <span class="c">halaman profil tiap penulis dan arsip tulisannya</span>
+├── Tentang
+│   ├── Visi, misi, nilai dasar
+│   ├── Struktur dan tata kelola  <span class="c">Pembina · Pengawas · Majelis Etik · Forum Pekerja</span>
+│   ├── Simpul komunitas          <span class="c">kampus · pesantren · serikat · komunitas adat</span>
+│   └── Transparansi              <span class="c">laporan keuangan teraudit · daftar donor</span>
+├── <span class="g">Minta Bantuan Hukum</span>  <span class="c">formulir pengaduan · jalur darurat 24 jam</span>
+├── Dukung                <span class="c">donasi publik · relawan · kemitraan kampus</span>
+└── <span class="g">Ruang Penulis</span> (login)  <span class="c">tulisan saya · tulis baru · pedoman · profil</span></div>
+      </div>
+
+      <div id="k-editorial">
+        <h2 class="base">4. Alur editorial</h2>
+        <p>Satu tulisan melewati enam status. Tahap cek hukum terpisah dari telaah editor karena kesalahan rujukan pasal atau bocornya identitas klien bisa merugikan perkara yang sedang berjalan.</p>
+        <div class="wf">
+          <div><span class="k">01 · PENULIS</span><b>Draf</b>Ditulis dan disimpan otomatis. Hanya penulis yang melihat.</div>
+          <div><span class="k">02 · PENULIS</span><b>Diajukan</b>Daftar periksa wajib dipenuhi sebelum tombol ajukan aktif.</div>
+          <div><span class="k">03 · EDITOR</span><b>Telaah editor</b>Struktur, kejelasan, keselamatan narasumber. Bisa dikembalikan untuk revisi.</div>
+          <div><span class="k">04 · ADVOKAT</span><b>Cek hukum</b>Verifikasi pasal, status berlaku, dan risiko pencemaran nama.</div>
+          <div><span class="k">05 · EDITOR</span><b>Siap terbit</b>Judul, gambar, SEO, jadwal, dan tautan ke Pantau Kasus.</div>
+          <div><span class="k">06 · PUBLIK</span><b>Terbit</b>Masuk buletin dan kanal sosial. Hak jawab terbuka.</div>
+        </div>
+      </div>
+
+      <div id="k-peran">
+        <h2 class="base">5. Peran dan hak akses</h2>
+        <div class="dtbl"><table>
+          <thead><tr><th>Peran</th><th>Menulis draf</th><th>Mengajukan</th><th>Menelaah</th><th>Cek hukum</th><th>Menerbitkan</th></tr></thead>
+          <tbody>
+            <tr><td>Penulis tamu</td><td class="yes">Ya</td><td class="yes">Ya</td><td class="no">Tidak</td><td class="no">Tidak</td><td class="no">Tidak</td></tr>
+            <tr><td>Kontributor tetap</td><td class="yes">Ya</td><td class="yes">Ya</td><td class="no">Tidak</td><td class="no">Tidak</td><td class="no">Tidak</td></tr>
+            <tr><td>Editor</td><td class="yes">Ya</td><td class="yes">Ya</td><td class="yes">Ya</td><td class="no">Tidak</td><td class="yes">Ya</td></tr>
+            <tr><td>Editor hukum (advokat)</td><td class="yes">Ya</td><td class="yes">Ya</td><td class="yes">Ya</td><td class="yes">Ya</td><td class="no">Tidak</td></tr>
+            <tr><td>Admin data kasus</td><td class="no">Tidak</td><td class="no">Tidak</td><td class="no">Tidak</td><td class="no">Tidak</td><td class="yes">Hanya Pantau Kasus</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div id="k-desain">
+        <h2 class="base">6. Sistem desain</h2>
+        <p>Warna dan bentuk diturunkan langsung dari logo. Biru tinta untuk keteguhan dan integritas, emas padi untuk rakyat dan harapan. Tiga warna bidang dipakai hanya sebagai penanda kecil, tidak pernah sebagai latar besar, agar situs tetap terasa satu identitas.</p>
+        <div class="swatches">
+          <div class="sw"><i style="background:#1B2440"></i><div><b>Biru tinta</b><span>#1B2440 · teks, kepala</span></div></div>
+          <div class="sw"><i style="background:#C8962E"></i><div><b>Emas padi</b><span>#C8962E · aksi utama</span></div></div>
+          <div class="sw"><i style="background:#F4F5F8;border-bottom:1px solid var(--line)"></i><div><b>Kertas</b><span>#F4F5F8 · latar</span></div></div>
+          <div class="sw"><i style="background:#2F5596"></i><div><b>Bidang Hukum</b><span>#2F5596</span></div></div>
+          <div class="sw"><i style="background:#A2403F"></i><div><b>Bidang HAM</b><span>#A2403F</span></div></div>
+          <div class="sw"><i style="background:#2E6A4E"></i><div><b>Bidang Lingkungan</b><span>#2E6A4E</span></div></div>
+        </div>
+        <h3>Tipografi</h3>
+        <div class="specimen">
+          <div class="spec"><small>Newsreader · judul &amp; isi tulisan</small><span style="font:500 2rem/1.1 var(--f-display)">Keadilan berdiri di atas kesejahteraan rakyat</span></div>
+          <div class="spec"><small>Public Sans · antarmuka</small><span style="font:500 1.05rem var(--f-ui)">Ajukan ke editor · Minta bantuan hukum · Berlangganan</span></div>
+          <div class="spec"><small>IBM Plex Mono · rujukan hukum</small><span class="mono" style="font-size:1rem">UU 32/2009 Ps. 66 · Perma 1/2023 · UU 20/2025</span></div>
+        </div>
+        <h3>Motif dan komponen khas</h3>
+        <ul>
+          <li><b>Alas emas</b>: garis pendek emas di bawah judul bagian, diambil dari alas pada logo. Maknanya sama: keadilan berpijak pada kesejahteraan rakyat.</li>
+          <li><b>Ilustrasi kontur</b>: gambar sampul default berupa garis kontur peta dalam warna bidang. Situs tetap rapi walau tulisan belum punya foto, dan foto korban tidak perlu dipaksakan.</li>
+          <li><b>Rujukan hukum</b>: pasal ditulis dengan huruf monospace dan status berlaku, sehingga pembaca langsung tahu mana teks hukum dan mana opini.</li>
+          <li><b>Mode gelap</b>: logo memakai varian latar gelap (figur krem, emas tetap) sesuai panduan logo.</li>
+        </ul>
+      </div>
+
+      <div id="k-aman">
+        <h2 class="base">7. Keamanan, privasi, dan aksesibilitas</h2>
+        <p>Situs lembaga HAM adalah sasaran serangan dan pengintaian. Keamanan diperlakukan sebagai fitur, bukan tambahan.</p>
+        <ul>
+          <li>Tanpa pelacak pihak ketiga. Statistik memakai analitik yang di-hosting sendiri tanpa cookie.</li>
+          <li>Formulir pengaduan terenkripsi; lampiran dibersihkan metadatanya (lokasi, nama perangkat) saat diunggah.</li>
+          <li>Autentikasi dua langkah wajib untuk editor dan admin; penulis tamu bisa masuk dengan tautan sekali pakai.</li>
+          <li>Pilihan nama pena dan anonim tercatat terpisah dari identitas asli, hanya bisa dibuka editor penanggung jawab.</li>
+          <li>Perlindungan DDoS dan cadangan harian di lokasi terpisah.</li>
+          <li>Target WCAG 2.1 AA: kontras warna, navigasi papan ketik, teks alternatif, dan ukuran teks yang bisa diperbesar.</li>
+          <li>Halaman tulisan di bawah 200 KB tanpa gambar agar terbuka cepat di jaringan 3G.</li>
+        </ul>
+      </div>
+
+      <div id="k-teknologi">
+        <h2 class="base">8. Rekomendasi teknologi</h2>
+        <p>Rekomendasi: <b style="color:var(--fg)">WordPress sebagai CMS</b> dengan status editorial khusus, karena banyak pengembang lokal yang menguasainya, biaya hosting rendah, dan kebutuhan seperti peran penulis, catatan kaki, serta tipe konten "Kasus" bisa dipenuhi tanpa membangun dari nol.</p>
+        <div class="dtbl"><table>
+          <thead><tr><th>Kebutuhan</th><th>Solusi</th><th>Catatan</th></tr></thead>
+          <tbody>
+            <tr><td>Alur editorial 6 status</td><td>Status kustom (mis. PublishPress)</td><td>Draf, Diajukan, Telaah, Cek hukum, Siap terbit, Terbit</td></tr>
+            <tr><td>Banyak penulis per tulisan</td><td>Co-authors + profil penulis</td><td>Mendukung nama pena</td></tr>
+            <tr><td>Pantau Kasus</td><td>Custom post type + taksonomi</td><td>Bidang, tahap, wilayah; ekspor CSV data terbuka</td></tr>
+            <tr><td>Buletin</td><td>Layanan buletin swakelola</td><td>Segmentasi per bidang</td></tr>
+            <tr><td>Donasi</td><td>Gerbang pembayaran lokal</td><td>QRIS, transfer bank, e-wallet</td></tr>
+            <tr><td>Kinerja</td><td>Tema ringan + CDN</td><td>Tanpa page builder berat</td></tr>
+          </tbody>
+        </table></div>
+        <p style="margin-top:1rem">Alternatif: Ghost untuk publikasi dan buletin yang lebih sederhana, tetapi Ghost tidak punya status editorial kustom dan tipe konten kasus, sehingga Pantau Kasus perlu dibangun terpisah.</p>
+      </div>
+
+      <div id="k-tahap">
+        <h2 class="base">9. Tahapan pengembangan</h2>
+        <p>Selaras dengan peta jalan lima tahun lembaga: situs tumbuh bersama kapasitas organisasi.</p>
+        <div class="phases" id="donasi">
+          <div class="phase"><span class="k">FASE 1 · BULAN 1–3</span><h3>Situs inti</h3><ul><li>Beranda, Tentang, Publikasi, halaman tulisan</li><li>Formulir bantuan hukum dan jalur darurat</li><li>Ruang Penulis dengan alur editorial dasar</li><li>Transparansi dan donasi</li></ul></div>
+          <div class="phase"><span class="k">FASE 2 · BULAN 4–9</span><h3>Data dan komunitas</h3><ul><li>Pantau Kasus internal, lalu publik secara bertahap</li><li>Halaman simpul komunitas</li><li>Buletin per bidang</li><li>Pelatihan menulis untuk paralegal</li></ul></div>
+          <div class="phase"><span class="k">FASE 3 · TAHUN 2–3</span><h3>Basis data publik</h3><ul><li>Basis data kasus terbuka dengan peta dan unduhan (target tahun 3)</li><li>Versi bahasa Inggris untuk laporan bayangan</li><li>Arsip putusan dan kertas posisi yang bisa dicari</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <svg aria-hidden="true"><use href="#emblem"/></svg>
+        <p><b style="font-weight:600;opacity:1;letter-spacing:.25em">LAKSANA</b><br>Lembaga Advokasi Keadilan Sosial dan Hak Asasi Manusia. Independen dan nonpartisan.</p>
+      </div>
+      <div><h4>Jelajahi</h4><ul><li><a href="#beranda" data-jump="publikasi">Publikasi</a></li><li><a href="#beranda" data-jump="isu">Isu</a></li><li><a href="#beranda" data-jump="kasus">Pantau Kasus</a></li><li><a href="#penulis">Ruang Penulis</a></li></ul></div>
+      <div><h4>Lembaga</h4><ul><li><a href="#konsep">Visi dan misi</a></li><li><a href="#konsep">Tata kelola</a></li><li><a href="#konsep">Simpul komunitas</a></li><li><a href="#beranda" data-jump="transparansi">Transparansi</a></li></ul></div>
+      <div><h4>Bertindak</h4><ul><li><a href="#bantuan">Minta bantuan hukum</a></li><li><a href="#beranda" data-jump="transparansi">Donasi</a></li><li><a href="#penulis">Kirim tulisan</a></li><li><a href="#konsep">Jadi relawan</a></li></ul></div>
+    </div>
+    <div class="legal"><span>Yayasan LAKSANA · Jakarta</span><span>Nilai dasar: independensi · kesetaraan · antikekerasan · demokrasi internal · martabat manusia</span></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  function store(k,v){try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null}}
+
+  /* ---------- Data contoh ---------- */
+  var POSTS=[
+    {t:"Pengakuan Bersalah dalam KUHAP Baru: Siapa Menjamin Tersangka Tidak Ditekan?",p:"hukum",type:"Analisis Hukum",a:"Bayu Prasetyo",r:"Advokat LAKSANA",g:false,d:"21 Nov 2026",m:9,s:3,x:"Mekanisme pengakuan bersalah menjanjikan perkara yang lebih cepat. Tanpa pendampingan sejak awal, ia juga membuka ruang tekanan terhadap tersangka yang tidak paham haknya."},
+    {t:"Pasal Penyerangan Kehormatan dan Masa Depan Kritik Warganet",p:"ham",type:"Opini",a:"Nadia Kusuma",r:"Dosen hukum tata negara",g:true,d:"19 Nov 2026",m:6,s:11,x:"Kritik terhadap pejabat publik adalah bagian dari kontrol warga. Penerapan pasal penyerangan kehormatan perlu batas yang jelas agar tidak menjadi alat pembungkam."},
+    {t:"Hutan Adat yang Belum Ditetapkan: Celah Pengakuan Masyarakat Adat",p:"ling",type:"Kertas Posisi",a:"Tim Riset LAKSANA",r:"",g:false,d:"15 Nov 2026",m:18,s:5,x:"Ribuan hektare wilayah adat masih menunggu penetapan. Selama status itu menggantung, komunitas adat rentan dilaporkan sebagai perambah di tanahnya sendiri."},
+    {t:"LAKSANA Membuka Pos Pengaduan Kriminalisasi Pembela Lingkungan",p:"ham",type:"Siaran Pers",a:"Divisi Kampanye",r:"",g:false,d:"12 Nov 2026",m:3,s:8,x:"Pos pengaduan melayani warga yang dilaporkan atau digugat karena memperjuangkan lingkungan hidup, dengan respons awal paling lama 24 jam."},
+    {t:"Membaca Permenkum 34/2025: Apa yang Berubah bagi Paralegal Desa",p:"hukum",type:"Analisis Hukum",a:"Sari Wulandari",r:"Koordinator paralegal",g:false,d:"8 Nov 2026",m:8,s:13,x:"Aturan baru tentang paralegal mengubah syarat pelatihan dan ruang kerja mereka. Kami merangkum apa artinya bagi simpul komunitas di desa."},
+    {t:"Banjir Bukan Takdir: Tanggung Jawab Negara atas Tata Ruang",p:"ling",type:"Opini",a:"Dimas Arya",r:"Peneliti tata ruang",g:true,d:"4 Nov 2026",m:7,s:2,x:"Ketika izin diterbitkan di kawasan resapan air, banjir menjadi akibat kebijakan. Warga berhak menuntut pertanggungjawaban."},
+    {t:"Catatan dari Sidang Buruh: Ketika PHK Massal Dibungkus Efisiensi",p:"hukum",type:"Laporan Lapangan",a:"Agus Hermawan",r:"Paralegal serikat pekerja",g:true,d:"1 Nov 2026",m:10,s:17,x:"Tiga bulan mendampingi ratusan buruh di pengadilan hubungan industrial memperlihatkan bagaimana alasan efisiensi dipakai untuk menghindari pesangon."},
+    {t:"Admin Akun Kritik Ditangkap: Lima Pertanyaan tentang Prosedurnya",p:"ham",type:"Laporan Lapangan",a:"Nadia Kusuma",r:"Dosen hukum tata negara",g:true,d:"29 Okt 2026",m:5,s:21,x:"Penangkapan pengelola akun yang mengkritik pemerintah daerah menyisakan pertanyaan tentang surat perintah, penyitaan perangkat, dan akses pendamping hukum."}
+  ];
+  var PL={hukum:"Hukum",ham:"Hak Asasi Manusia",ling:"Lingkungan Hidup"};
+  var STAGES=["Pengaduan","Penyidikan","Penuntutan","Persidangan","Putusan"];
+  var CASES=[
+    {n:"Kriminalisasi nelayan penolak tambang pasir",w:"Jawa Tengah",p:"ling",st:1,s:"crit",sl:"Butuh solidaritas",u:"2 hari lalu"},
+    {n:"Penangkapan admin akun kritik pemerintah daerah",w:"Sulawesi Selatan",p:"ham",st:2,s:"warn",sl:"Pendampingan aktif",u:"4 hari lalu"},
+    {n:"Sengketa tanah ulayat dengan pemegang HGU perkebunan",w:"Kalimantan Barat",p:"ling",st:3,s:"warn",sl:"Sidang berjalan",u:"1 minggu lalu"},
+    {n:"PHK massal 312 buruh pabrik garmen",w:"Banten",p:"hukum",st:4,s:"ok",sl:"Putusan menguntungkan",u:"2 minggu lalu"},
+    {n:"Penggusuran kampung kota tanpa musyawarah",w:"DKI Jakarta",p:"hukum",st:0,s:"warn",sl:"Verifikasi",u:"3 minggu lalu"}
+  ];
+  var SUBS=[
+    {t:"Banjir Bukan Takdir: Tanggung Jawab Negara atas Tata Ruang",p:"ling",type:"Opini",st:0,u:"Diubah hari ini"},
+    {t:"Rencana Detail Tata Ruang dan Hak Warga untuk Berkeberatan",p:"ling",type:"Analisis Hukum",st:3,u:"Cek hukum oleh Bayu Prasetyo"},
+    {t:"Mengapa Sungai di Kota Kami Tak Lagi Punya Bantaran",p:"ling",type:"Laporan Lapangan",st:2,u:"Dikembalikan: perlu penyamaran lokasi",rev:true},
+    {t:"Kampus dan Klinik Hukum: Belajar dari Pendampingan Warga",p:"hukum",type:"Opini",st:4,u:"Terbit 14 Okt 2026 · 2.310 pembaca"}
+  ];
+  var SNAME=["Draf","Diajukan","Telaah editor","Cek hukum","Terbit"];
+  var SCLS=["st-draft","st-review","st-review","st-legal","st-pub"];
+
+  /* ---------- Ilustrasi kontur (value noise + marching squares) ---------- */
+  function rng(seed){var s=seed*9301+49297;return function(){s=(s*9301+49297)%233280;return s/233280}}
+  function noiseField(seed,gw,gh){var r=rng(seed),g=[];for(var i=0;i<(gw+1)*(gh+1);i++)g.push(r());
+    return function(x,y){var xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi;
+      var sx=xf*xf*(3-2*xf),sy=yf*yf*(3-2*yf);
+      function v(a,b){a=Math.min(a,gw);b=Math.min(b,gh);return g[b*(gw+1)+a]}
+      var a=v(xi,yi),b=v(xi+1,yi),c=v(xi,yi+1),d=v(xi+1,yi+1);
+      return a+(b-a)*sx+(c-a)*sy+(a-b-c+d)*sx*sy}}
+  function cssVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+  function drawMap(cv){
+    var rect=cv.getBoundingClientRect(); if(!rect.width) return;
+    var dpr=Math.min(window.devicePixelRatio||1,2),W=Math.round(rect.width*dpr),H=Math.round(rect.height*dpr);
+    cv.width=W;cv.height=H;var ctx=cv.getContext("2d");
+    var seed=+cv.dataset.seed||1,col=cssVar("--p-"+(cv.dataset.pillar||"hukum")),gold=cssVar("--gold");
+    var n1=noiseField(seed,4,3),n2=noiseField(seed+31,9,7);
+    var cell=Math.max(6,Math.round(W/70)),cols=Math.ceil(W/cell)+1,rows=Math.ceil(H/cell)+1,F=[];
+    for(var j=0;j<rows;j++)for(var i=0;i<cols;i++){var u=i/(cols-1),v=j/(rows-1);F.push(n1(u*4,v*3)*.75+n2(u*9,v*7)*.25)}
+    ctx.clearRect(0,0,W,H);ctx.lineCap="round";
+    var levels=[],L;for(L=.18;L<.9;L+=.045)levels.push(L);
+    levels.forEach(function(L,k){
+      ctx.beginPath();ctx.strokeStyle=(k%4===0)?col:col;ctx.globalAlpha=(k%4===0)?.85:.38;ctx.lineWidth=((k%4===0)?1.6:1)*dpr;
+      for(var j=0;j<rows-1;j++)for(var i=0;i<cols-1;i++){
+        var a=F[j*cols+i],b=F[j*cols+i+1],c=F[(j+1)*cols+i+1],d=F[(j+1)*cols+i],x=i*cell,y=j*cell,p=[];
+        function e(v1,v2,x1,y1,x2,y2){if((v1<L)!==(v2<L)){var t=(L-v1)/(v2-v1);p.push([x1+(x2-x1)*t,y1+(y2-y1)*t])}}
+        e(a,b,x,y,x+cell,y);e(b,c,x+cell,y,x+cell,y+cell);e(c,d,x+cell,y+cell,x,y+cell);e(d,a,x,y+cell,x,y);
+        for(var q=0;q+1<p.length;q+=2){ctx.moveTo(p[q][0],p[q][1]);ctx.lineTo(p[q+1][0],p[q+1][1])}
+      }
+      ctx.stroke();
+    });
+    // titik dampingan: puncak tertinggi
+    var best=0,bi=0;F.forEach(function(v,i){if(v>best){best=v;bi=i}});
+    var px=(bi%cols)*cell,py=Math.floor(bi/cols)*cell;ctx.globalAlpha=1;
+    ctx.fillStyle=gold;ctx.beginPath();ctx.arc(px,py,5*dpr,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=gold;ctx.lineWidth=1.2*dpr;ctx.beginPath();ctx.arc(px,py,11*dpr,0,Math.PI*2);ctx.stroke();
+  }
+  function drawAll(){ $$(".view.on canvas[data-seed]").forEach(drawMap) }
+
+  /* ---------- Beranda: feed ---------- */
+  var fType="semua",fPillar=null;
+  function initials(n){return n.split(" ").map(function(w){return w[0]}).slice(0,2).join("")}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function renderFeed(){
+    var list=POSTS.filter(function(p){return (fType==="semua"||p.type===fType)&&(!fPillar||p.p===fPillar)});
+    $("#feedNote").textContent=(fPillar?"Bidang: "+PL[fPillar]+" · ":"Menampilkan semua bidang · ")+list.length+" tulisan"+(fPillar?"  (ketuk bidang lagi untuk menghapus saringan)":"");
+    $("#feed").innerHTML=list.length?list.map(function(p){return '<a class="card" href="#artikel">'+
+      '<div class="map"><canvas data-seed="'+p.s+'" data-pillar="'+p.p+'"></canvas></div>'+
+      '<div class="meta"><span class="pill '+p.p+'">'+PL[p.p]+'</span><span class="type">'+esc(p.type.toUpperCase())+'</span></div>'+
+      '<h3>'+esc(p.t)+'</h3><p class="ex">'+esc(p.x)+'</p>'+
+      '<p class="who"><b>'+esc(p.a)+'</b>'+(p.g?'<span class="badge-guest">Penulis tamu</span>':'')+' · '+p.d+' · '+p.m+' mnt</p></a>'}).join(""):
+      '<div class="empty">Belum ada tulisan untuk saringan ini. Coba jenis tulisan lain.</div>';
+    requestAnimationFrame(function(){$$("#feed canvas").forEach(drawMap)});
+  }
+  $("#typeFilters").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;fType=b.dataset.type;
+    $$("#typeFilters button").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false")});renderFeed()});
+  $$("[data-f-pillar]").forEach(function(c){c.addEventListener("click",function(){var p=c.dataset.fPillar;fPillar=(fPillar===p)?null:p;renderFeed();
+    $("#publikasi").scrollIntoView({behavior:"smooth"})})});
+
+  $("#caseRows").innerHTML=CASES.map(function(c){return '<tr><td><b style="font-weight:600">'+esc(c.n)+'</b><div class="muted" style="font-size:.8rem;margin-top:.2rem">'+c.w+'</div></td>'+
+    '<td><span class="pill '+c.p+'">'+PL[c.p]+'</span></td>'+
+    '<td><span class="stage-l">'+STAGES[c.st].toUpperCase()+'</span><div class="stage">'+STAGES.map(function(_,i){return '<i class="'+(i<=c.st?"done":"")+'"></i>'}).join("")+'</div></td>'+
+    '<td><span class="status s-'+c.s+'">'+c.sl+'</span></td><td class="muted">'+c.u+'</td></tr>'}).join("");
+
+  /* ---------- Ruang penulis ---------- */
+  function renderSubs(){
+    var counts=[0,0,0,0,0];SUBS.forEach(function(s){counts[s.st]++});
+    $("#pipe").innerHTML=SNAME.map(function(n,i){return '<div><b>'+counts[i]+'</b><span>'+n+'</span></div>'}).join("");
+    $("#nSubs").textContent=SUBS.length;
+    $("#subs").innerHTML=SUBS.map(function(s,idx){return '<div class="sub"><div style="min-width:0"><div class="meta" style="display:flex;gap:.8rem;flex-wrap:wrap"><span class="pill '+s.p+'">'+PL[s.p]+'</span><span class="type">'+s.type.toUpperCase()+'</span></div>'+
+      '<h3>'+esc(s.t)+'</h3><p class="m">'+esc(s.u)+'</p><div class="track">'+SNAME.map(function(_,i){return '<i class="'+(i<=s.st?"done":"")+'"></i>'}).join("")+'</div></div>'+
+      '<div class="row" style="align-items:center"><span class="st-chip '+(s.rev?"st-rev":SCLS[s.st])+'">'+(s.rev?"Perlu revisi":SNAME[s.st])+'</span>'+(s.st===0||s.rev?'<button class="btn btn-line" type="button" data-pane="tulis" style="padding:.45rem .7rem;font-size:.8rem">Buka</button>':'')+'</div></div>'}).join("");
+  }
+  function showPane(name){
+    $$(".pane").forEach(function(p){p.classList.toggle("on",p.id==="p-"+name)});
+    $$(".studio-nav button").forEach(function(b){b.setAttribute("aria-current",b.dataset.pane===name?"true":"false")});
+  }
+  document.addEventListener("click",function(e){var b=e.target.closest("[data-pane]");if(!b)return;
+    if(b.tagName==="A"){setTimeout(function(){showPane(b.dataset.pane)},0)} else showPane(b.dataset.pane)});
+
+  var body=$("#edBody");
+  function words(){var t=body.innerText.trim();var n=t?t.split(/\s+/).length:0;$("#wc").textContent=n.toLocaleString("id-ID")+" kata · "+Math.max(1,Math.round(n/200))+" menit baca"}
+  var tmr;
+  function autosave(){clearTimeout(tmr);$("#saved").textContent="Menyimpan…";tmr=setTimeout(function(){saveDraft(true)},900)}
+  function saveDraft(silent){
+    var d={t:$("#edTitle").value,k:$("#edDek").value,b:body.innerHTML,f:$("#edFns").innerHTML,p:$("#edPillar").value,y:$("#edType").value,g:$("#edTags").value};
+    var ok=store("laksana-draft",JSON.stringify(d))!==null||(function(){try{localStorage.getItem("x");return true}catch(e){return false}})();
+    var tm=new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"});
+    $("#saved").textContent=ok?"Tersimpan di perangkat ini · "+tm:"Draf hanya tersimpan selama halaman terbuka";
+    if(!silent) toast("Draf disimpan");
+  }
+  (function load(){var raw=store("laksana-draft");if(!raw)return;try{var d=JSON.parse(raw);$("#edTitle").value=d.t;$("#edDek").value=d.k;body.innerHTML=d.b;$("#edFns").innerHTML=d.f;$("#edPillar").value=d.p;$("#edType").value=d.y;$("#edTags").value=d.g||"";$("#saved").textContent="Draf dipulihkan dari perangkat ini"}catch(e){}})();
+  body.addEventListener("input",function(){words();autosave()});
+  ["#edTitle","#edDek","#edTags","#edPillar","#edType"].forEach(function(s){$(s).addEventListener("input",function(){autosave();updSubmit()})});
+  $$(".toolbar [data-cmd]").forEach(function(b){b.addEventListener("mousedown",function(e){e.preventDefault()});b.addEventListener("click",function(){
+    body.focus();var c=b.dataset.cmd;
+    if(c==="h2")document.execCommand("formatBlock",false,"h2");
+    else if(c==="quote")document.execCommand("formatBlock",false,"blockquote");
+    else document.execCommand(c,false,null);autosave()})});
+  $("#fnBtn").addEventListener("mousedown",function(e){e.preventDefault()});
+  $("#fnBtn").addEventListener("click",function(){
+    body.focus();var n=$$("#edFns li").length+1;document.execCommand("insertHTML",false,"<sup>"+n+"</sup>&nbsp;");
+    var li=document.createElement("li");li.contentEditable="true";li.textContent="Tulis sumber rujukan di sini.";$("#edFns").appendChild(li);
+    li.focus();var r=document.createRange();r.selectNodeContents(li);var s=getSelection();s.removeAllRanges();s.addRange(r);autosave();toast("Catatan kaki "+n+" ditambahkan")});
+  var savedRange=null;
+  body.addEventListener("blur",function(){var s=getSelection();if(s.rangeCount)savedRange=s.getRangeAt(0).cloneRange()});
+  $("#lawSel").addEventListener("change",function(){var v=this.value;if(!v)return;body.focus();
+    if(savedRange){var s=getSelection();s.removeAllRanges();s.addRange(savedRange)}
+    document.execCommand("insertHTML",false,'<span class="lawref">'+esc(v)+'</span>&nbsp;');this.value="";autosave()});
+  function updSubmit(){var all=$$("#checks input").every(function(c){return c.checked});$("#submitBtn").disabled=!(all&&$("#edTitle").value.trim().length>8)}
+  $$("#checks input").forEach(function(c){c.addEventListener("change",updSubmit)});
+  $("#saveBtn").addEventListener("click",function(){saveDraft(false)});
+  $("#submitBtn").addEventListener("click",function(){
+    saveDraft(true);$("#edStatus").textContent="Diajukan";$("#edStatus").className="st-chip st-review";
+    $$("#edTrack i").forEach(function(i,k){i.classList.toggle("done",k<=1)});
+    SUBS[0].st=1;SUBS[0].t=$("#edTitle").value;SUBS[0].u="Diajukan hari ini · menunggu editor";renderSubs();
+    this.disabled=true;toast("Tulisan diajukan. Editor akan memberi masukan dalam 7 hari kerja.")});
+  $("#pfSave").addEventListener("click",function(){toast("Profil disimpan")});
+
+  /* ---------- Formulir ---------- */
+  $("#newsForm").addEventListener("submit",function(e){e.preventDefault();toast("Terima kasih. Cek email untuk konfirmasi langganan.");this.reset()});
+  $("#helpForm").addEventListener("submit",function(e){e.preventDefault();
+    var urg=$("#hUrg").value;toast(urg.indexOf("Darurat")===0?"Pengaduan darurat diterima. Tim respons akan menghubungimu.":"Pengaduan diterima. Tim kami akan menghubungimu dalam 2 hari kerja.")});
+
+  /* ---------- Artikel ---------- */
+  $("[data-copy]").addEventListener("click",function(){var u=location.href,btn=this;
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(function(){toast("Tautan disalin")},function(){toast("Salin tautan dari bilah alamat")})}else toast("Salin tautan dari bilah alamat")});
+  var big=false;$("[data-size]").addEventListener("click",function(){big=!big;$("#prose").style.fontSize=big?"1.32rem":"";this.textContent=big?"Ukuran normal":"Perbesar teks"});
+
+  /* ---------- Toast ---------- */
+  var tt;function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(function(){t.classList.remove("show")},2800)}
+
+  /* ---------- Router ---------- */
+  var VIEWS=["beranda","artikel","penulis","bantuan","konsep"],pendingJump=null;
+  function route(){
+    var h=(location.hash||"").slice(1),v=VIEWS.indexOf(h)>=0?h:"beranda";
+    var anchorInView=null;
+    if(VIEWS.indexOf(h)<0&&h){var el=document.getElementById(h);if(el){var host=el.closest(".view");if(host){v=host.id.slice(2);anchorInView=el}}}
+    $$(".view").forEach(function(x){x.classList.toggle("on",x.id==="v-"+v)});
+    $$(".protobar a").forEach(function(a){if(a.dataset.v===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+    $("#mainNav").classList.remove("open");$("#menuBtn").setAttribute("aria-expanded","false");
+    var target=anchorInView||(pendingJump&&document.getElementById(pendingJump));pendingJump=null;
+    requestAnimationFrame(function(){ if(target) target.scrollIntoView(); else window.scrollTo(0,0); drawAll() });
+  }
+  document.addEventListener("click",function(e){var a=e.target.closest("a[data-jump]");if(!a)return;
+    var want=a.getAttribute("href");pendingJump=a.dataset.jump;
+    if(location.hash===want){e.preventDefault();route()}});
+  $$("a[data-anchor]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();var el=document.querySelector(a.getAttribute("href"));if(el)el.scrollIntoView({behavior:"smooth"})})});
+  window.addEventListener("hashchange",route);
+  $("#menuBtn").addEventListener("click",function(){var o=$("#mainNav").classList.toggle("open");this.setAttribute("aria-expanded",o?"true":"false")});
+
+  /* ---------- Tema ---------- */
+  var modes=["sistem","terang","gelap"],mi=0;
+  try{var sm=localStorage.getItem("laksana-theme");if(sm&&modes.indexOf(sm)>=0)mi=modes.indexOf(sm)}catch(e){}
+  function applyTheme(){var m=modes[mi];if(m==="sistem")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",m==="gelap"?"dark":"light");
+    $("#themeBtn").textContent="Tema: "+m;store("laksana-theme",m);drawAll()}
+  $("#themeBtn").addEventListener("click",function(){mi=(mi+1)%3;applyTheme()});
+  try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",drawAll)}catch(e){}
+  var rz;window.addEventListener("resize",function(){clearTimeout(rz);rz=setTimeout(drawAll,150)});
+
+  renderFeed();renderSubs();words();applyTheme();route();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawAll);
+})();
+</script>
